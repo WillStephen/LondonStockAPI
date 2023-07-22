@@ -1,3 +1,4 @@
+using LondonStockApi.Data;
 using System.Reflection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(
         Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
 });
+
+builder.Services.AddScoped<IStockContext, StockContext>();
 
 WebApplication app = builder.Build();
 

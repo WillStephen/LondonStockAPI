@@ -1,5 +1,5 @@
+using LondonStockApi.Data;
 using LondonStockApi.DTO;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LondonStockApi.Controllers
@@ -8,10 +8,12 @@ namespace LondonStockApi.Controllers
     [Route("stocktransaction")]
     public class StockTransactionController : ControllerBase
     {
+        private readonly IStockContext stockContext;
         private readonly ILogger<StockTransactionController> logger;
 
-        public StockTransactionController(ILogger<StockTransactionController> logger)
+        public StockTransactionController(IStockContext stockContext, ILogger<StockTransactionController> logger)
         {
+            this.stockContext = stockContext;
             this.logger = logger;
         }
 
@@ -22,6 +24,8 @@ namespace LondonStockApi.Controllers
         public async Task<ActionResult<StockTransactionDTO>> Post([FromBody] StockTransactionDTO stockTransaction)
         {
             this.logger.LogInformation("Received stock transaction {stockTransaction}", stockTransaction);
+
+            // TODO: map DTO to entity and commit to DB
 
             return StatusCode(201);
         }
