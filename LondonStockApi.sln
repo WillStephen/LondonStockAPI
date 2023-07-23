@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LondonStockApi", "LondonStockApi\LondonStockApi.csproj", "{026D57C1-0A2D-427C-9479-1876542F3186}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LondonStockApi", "LondonStockApi\LondonStockApi.csproj", "{026D57C1-0A2D-427C-9479-1876542F3186}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LondonStockApi.UnitTest", "LondonStockApi.UnitTest\LondonStockApi.UnitTest.csproj", "{840B8F7C-CBEF-46B6-8AF0-0C86F8E013EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{026D57C1-0A2D-427C-9479-1876542F3186}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{026D57C1-0A2D-427C-9479-1876542F3186}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{026D57C1-0A2D-427C-9479-1876542F3186}.Release|Any CPU.Build.0 = Release|Any CPU
+		{840B8F7C-CBEF-46B6-8AF0-0C86F8E013EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{840B8F7C-CBEF-46B6-8AF0-0C86F8E013EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{840B8F7C-CBEF-46B6-8AF0-0C86F8E013EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{840B8F7C-CBEF-46B6-8AF0-0C86F8E013EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
