@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LondonStockApi.Data.Entities
 {
+    /// <summary>
+    /// An individual stock transaction in the database.
+    /// </summary>
     [Table("StockTransactions")]
     public class StockTransaction
     {

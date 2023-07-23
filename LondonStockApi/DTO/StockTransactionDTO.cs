@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LondonStockApi.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace LondonStockApi.DTO
 {
@@ -10,7 +11,8 @@ namespace LondonStockApi.DTO
     /// <param name="NumberOfShares">Number of shares traded in the transaction.</param>
     /// <param name="BrokerId">Unique ID of the broker that requested this transaction.</param>
     public record StockTransactionDTO(
-        [Required(AllowEmptyStrings = false)]
+        [Required]
+        [StockTicker]
         string Ticker,
 
         [Required]

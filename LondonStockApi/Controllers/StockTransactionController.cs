@@ -32,6 +32,7 @@ namespace LondonStockApi.Controllers
         {
             this.logger.LogInformation("Received stock transaction from client {stockTransaction}", stockTransaction);
 
+            // map our DTO to an entity
             StockTransaction entity = this.mapper.Map<StockTransaction>(stockTransaction);
 
             await this.stockContext.StockTransactions.AddAsync(entity);
