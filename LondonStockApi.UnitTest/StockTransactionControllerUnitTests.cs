@@ -40,8 +40,8 @@ namespace LondonStockApi.UnitTest
 
         #region Test methods
 
-        [TestMethod]
-        public async Task Post_ContextHasNoIssues_Returns201()
+        [TestMethod, Description("Check that when sending a transaction, and the database persistence has no issues, a 201 code is returned")]
+        public async Task Post_ContextHasNoIssues_ReturnsCreated()
         {
             // Arrange
             var dto = this.fixture.Create<StockTransactionDTO>();
@@ -65,7 +65,7 @@ namespace LondonStockApi.UnitTest
             Assert.AreEqual((int)HttpStatusCode.Created, statusCodeResult.StatusCode);
         }
 
-        [TestMethod]
+        [TestMethod, Description("Check that when sending a transaction, and the database throws an error, we don't catch that error (so that a 500 code is returned by the framework)")]
         public async Task Post_ContextThrows_Uncaught()
         {
             // Arrange
@@ -93,6 +93,6 @@ namespace LondonStockApi.UnitTest
                 && dto.BrokerId == entity.BrokerId;
         }
 
-        #endregion
+        #endregion Support methods
     }
 }
