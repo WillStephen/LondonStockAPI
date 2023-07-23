@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LondonStockApi.Controllers
 {
     [ApiController]
-    [Route("stocktransaction")]
+    [Route("api/[controller]")]
     public class StockTransactionController : ControllerBase
     {
         private readonly IStockContext stockContext;
