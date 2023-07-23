@@ -32,7 +32,10 @@ namespace LondonStockApi.Migrations
 
                     b.HasKey("Ticker");
 
-                    b.ToTable("StockQuotes");
+                    b.ToTable("StockQuote", null, t =>
+                        {
+                            t.ExcludeFromMigrations();
+                        });
                 });
 
             modelBuilder.Entity("LondonStockApi.Data.Entities.StockTransaction", b =>

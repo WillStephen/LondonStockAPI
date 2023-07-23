@@ -13,6 +13,8 @@ namespace LondonStockApi.Data
         /// <inheritdoc/>
         public DbSet<StockTransaction> StockTransactions { get; set; }
 
+        /// <summary>Objects created by the stock quoted stored procedures.</summary>
+        /// <remarks>Not mapped to a table.</remarks>
         private DbSet<StockQuote> StockQuotes { get; set; }
 
         public StockContext(IConfiguration configuration)
@@ -68,6 +70,12 @@ namespace LondonStockApi.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder options) => 
             options.UseSqlServer(this.configuration.GetConnectionString("LondonStockApi"));
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StockQuote>().ToTable(nameof(StockQuote), t =>
+                t.ExcludeFromMigrations());
+        }
 
         #region Support methods
 

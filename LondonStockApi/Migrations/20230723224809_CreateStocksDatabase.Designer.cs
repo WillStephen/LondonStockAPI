@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LondonStockApi.Migrations
 {
     [DbContext(typeof(StockContext))]
-    [Migration("20230723195425_CreateStocksDatabase")]
+    [Migration("20230723224809_CreateStocksDatabase")]
     partial class CreateStocksDatabase
     {
         /// <inheritdoc />
@@ -35,7 +35,10 @@ namespace LondonStockApi.Migrations
 
                     b.HasKey("Ticker");
 
-                    b.ToTable("StockQuotes");
+                    b.ToTable("StockQuote", null, t =>
+                        {
+                            t.ExcludeFromMigrations();
+                        });
                 });
 
             modelBuilder.Entity("LondonStockApi.Data.Entities.StockTransaction", b =>
