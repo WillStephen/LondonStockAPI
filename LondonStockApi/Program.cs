@@ -14,6 +14,8 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddScoped<IStockContext, StockContext>();
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
