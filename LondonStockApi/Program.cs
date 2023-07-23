@@ -19,7 +19,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsEnvironment("Local"))
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -32,5 +32,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseStatusCodePages();
+
+app.UseHttpLogging();
 
 app.Run();
