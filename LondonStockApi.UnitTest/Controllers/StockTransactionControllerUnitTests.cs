@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Net;
 
-namespace LondonStockApi.UnitTest
+namespace LondonStockApi.UnitTest.Controllers
 {
     [TestClass]
     public class StockTransactionControllerUnitTests
@@ -28,14 +28,14 @@ namespace LondonStockApi.UnitTest
 
         public StockTransactionControllerUnitTests()
         {
-            this.mockStockContext = new Mock<IStockContext>();
-            this.mockStockTransactionSet = new Mock<DbSet<StockTransaction>>();
-            this.mockStockContext.Setup(msc => msc.StockTransactions).Returns(this.mockStockTransactionSet.Object);
-            this.mockLogger = new Mock<ILogger<StockTransactionController>>();
+            mockStockContext = new Mock<IStockContext>();
+            mockStockTransactionSet = new Mock<DbSet<StockTransaction>>();
+            mockStockContext.Setup(msc => msc.StockTransactions).Returns(mockStockTransactionSet.Object);
+            mockLogger = new Mock<ILogger<StockTransactionController>>();
 
             IMapper mapper = new MapperConfiguration(mc => mc.AddProfile(new StockTransactionMapping())).CreateMapper();
 
-            this.sut = new StockTransactionController(this.mockStockContext.Object, mapper, this.mockLogger.Object);
+            sut = new StockTransactionController(mockStockContext.Object, mapper, mockLogger.Object);
         }
 
         #region Test methods
@@ -44,20 +44,20 @@ namespace LondonStockApi.UnitTest
         public async Task Post_ContextHasNoIssues_ReturnsCreated()
         {
             // Arrange
-            var dto = this.fixture.Create<StockTransactionDTO>();
+            var dto = fixture.Create<StockTransactionDTO>();
 
             // Act
-            ActionResult<StockTransactionDTO> result = await this.sut.Post(dto);
+            ActionResult<StockTransactionDTO> result = await sut.Post(dto);
 
             // Assert
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Received stock transaction from client");
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Persisted stock transaction");
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Received stock transaction from client");
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Persisted stock transaction");
 
-            this.mockStockContext.Verify(
+            mockStockContext.Verify(
                 sc => sc.StockTransactions.AddAsync(It.Is<StockTransaction>(st => ValuesEqual(dto, st)), default),
                 Times.Once);
-            this.mockStockContext.Verify(sc => sc.SaveChangesAsync(default), Times.Once);
-            this.mockStockContext.VerifyNoOtherCalls();
+            mockStockContext.Verify(sc => sc.SaveChangesAsync(default), Times.Once);
+            mockStockContext.VerifyNoOtherCalls();
 
             Assert.IsNull(result.Value);
             StatusCodeResult? statusCodeResult = result.Result as StatusCodeResult;
@@ -69,16 +69,16 @@ namespace LondonStockApi.UnitTest
         public async Task Post_ContextThrows_Uncaught()
         {
             // Arrange
-            var dto = this.fixture.Create<StockTransactionDTO>();
-            this.mockStockContext
+            var dto = fixture.Create<StockTransactionDTO>();
+            mockStockContext
                 .Setup(msc => msc.SaveChangesAsync(default))
                 .Throws<InvalidOperationException>();
 
             // Act + Assert
-            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => this.sut.Post(dto));
+            await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => sut.Post(dto));
 
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Received stock transaction from client");
-            this.mockLogger.VerifyNoOtherCalls();
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Received stock transaction from client");
+            mockLogger.VerifyNoOtherCalls();
         }
 
         #endregion Test methods

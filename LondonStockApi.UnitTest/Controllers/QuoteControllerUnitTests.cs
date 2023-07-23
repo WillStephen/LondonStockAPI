@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace LondonStockApi.UnitTest
+namespace LondonStockApi.UnitTest.Controllers
 {
     [TestClass]
     public class QuoteControllerUnitTests
@@ -25,12 +25,12 @@ namespace LondonStockApi.UnitTest
 
         public QuoteControllerUnitTests()
         {
-            this.mockStockContext = new Mock<IStockContext>();
-            this.mockLogger = new Mock<ILogger<QuoteController>>();
+            mockStockContext = new Mock<IStockContext>();
+            mockLogger = new Mock<ILogger<QuoteController>>();
 
             IMapper mapper = new MapperConfiguration(mc => mc.AddProfile(new StockQuoteMapping())).CreateMapper();
 
-            this.sut = new QuoteController(this.mockStockContext.Object, mapper, this.mockLogger.Object);
+            sut = new QuoteController(mockStockContext.Object, mapper, mockLogger.Object);
         }
 
         #region Test methods
@@ -42,15 +42,15 @@ namespace LondonStockApi.UnitTest
         {
             // Arrange
             string ticker = "NWG";
-            StockQuote quote = this.fixture.Create<StockQuote>();
-            this.mockStockContext.Setup(sc => sc.TryGetStockQuote(ticker)).ReturnsAsync((true, quote));
+            StockQuote quote = fixture.Create<StockQuote>();
+            mockStockContext.Setup(sc => sc.TryGetStockQuote(ticker)).ReturnsAsync((true, quote));
 
             // Act
-            ActionResult<StockQuoteDTO> result = await this.sut.GetSingleQuote(ticker);
+            ActionResult<StockQuoteDTO> result = await sut.GetSingleQuote(ticker);
 
             // Assert
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Received stock quote request for ticker ");
-            this.mockLogger.VerifyNoOtherCalls();
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Received stock quote request for ticker ");
+            mockLogger.VerifyNoOtherCalls();
 
             AssertOKResult(result, expectedTicker: quote.Ticker, expectedPrice: quote.PriceInSterling);
         }
@@ -59,16 +59,16 @@ namespace LondonStockApi.UnitTest
         public async Task GetQuotes_NoTickersSpecified_ReturnsAllQuotes()
         {
             // Arrange
-            IEnumerable<StockQuote> quotes = this.fixture.CreateMany<StockQuote>(3);
-            this.mockStockContext.Setup(sc => sc.GetAllStockQuotes()).ReturnsAsync(quotes);
+            IEnumerable<StockQuote> quotes = fixture.CreateMany<StockQuote>(3);
+            mockStockContext.Setup(sc => sc.GetAllStockQuotes()).ReturnsAsync(quotes);
 
             // Act
-            ActionResult<StockQuoteDTO[]> result = await this.sut.GetQuotes(Array.Empty<string>());
+            ActionResult<StockQuoteDTO[]> result = await sut.GetQuotes(Array.Empty<string>());
 
             // Assert
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Received stock quote request for all tickers");
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Retrieved 3 stock quotes from database");
-            this.mockLogger.VerifyNoOtherCalls();
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Received stock quote request for all tickers");
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Retrieved 3 stock quotes from database");
+            mockLogger.VerifyNoOtherCalls();
 
             AssertOKResult(result, quotes);
         }
@@ -80,18 +80,18 @@ namespace LondonStockApi.UnitTest
         public async Task GetQuotes_TickersSpecified_ReturnsQuotes(int numberOfTickers)
         {
             // Arrange
-            IEnumerable<StockQuote> quotes = this.fixture.CreateMany<StockQuote>(numberOfTickers);
+            IEnumerable<StockQuote> quotes = fixture.CreateMany<StockQuote>(numberOfTickers);
             string[] tickers = quotes.Select(q => q.Ticker).ToArray();
 
-            this.mockStockContext.Setup(sc => sc.TryGetStockQuotes(tickers)).ReturnsAsync((true, quotes));
+            mockStockContext.Setup(sc => sc.TryGetStockQuotes(tickers)).ReturnsAsync((true, quotes));
 
             // Act
-            ActionResult<StockQuoteDTO[]> result = await this.sut.GetQuotes(tickers);
+            ActionResult<StockQuoteDTO[]> result = await sut.GetQuotes(tickers);
 
             // Assert
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: $"Received stock quote request for {numberOfTickers} tickers: ");
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: $"Retrieved {numberOfTickers} stock quotes from database");
-            this.mockLogger.VerifyNoOtherCalls();
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: $"Received stock quote request for {numberOfTickers} tickers: ");
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: $"Retrieved {numberOfTickers} stock quotes from database");
+            mockLogger.VerifyNoOtherCalls();
 
             AssertOKResult(result, quotes);
         }
@@ -105,15 +105,15 @@ namespace LondonStockApi.UnitTest
         {
             // Arrange
             string ticker = "NWG";
-            this.mockStockContext.Setup(sc => sc.TryGetStockQuote(ticker)).ReturnsAsync((false, null));
+            mockStockContext.Setup(sc => sc.TryGetStockQuote(ticker)).ReturnsAsync((false, null));
 
             // Act
-            ActionResult<StockQuoteDTO> result = await this.sut.GetSingleQuote(ticker);
+            ActionResult<StockQuoteDTO> result = await sut.GetSingleQuote(ticker);
 
             // Assert
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Received stock quote request for ticker ");
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Stock not found in database");
-            this.mockLogger.VerifyNoOtherCalls();
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Received stock quote request for ticker ");
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: "Stock not found in database");
+            mockLogger.VerifyNoOtherCalls();
 
             Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
         }
@@ -122,18 +122,18 @@ namespace LondonStockApi.UnitTest
         public async Task GetQuotes_NotAllSpecifiedTickersFound_ReturnsNotFound()
         {
             // Arrange
-            IEnumerable<StockQuote> quotes = this.fixture.CreateMany<StockQuote>(3);
+            IEnumerable<StockQuote> quotes = fixture.CreateMany<StockQuote>(3);
             string[] tickers = quotes.Select(q => q.Ticker).ToArray();
 
-            this.mockStockContext.Setup(sc => sc.TryGetStockQuotes(tickers)).ReturnsAsync((false, quotes.Skip(1)));
+            mockStockContext.Setup(sc => sc.TryGetStockQuotes(tickers)).ReturnsAsync((false, quotes.Skip(1)));
 
             // Act
-            ActionResult<StockQuoteDTO[]> result = await this.sut.GetQuotes(tickers);
+            ActionResult<StockQuoteDTO[]> result = await sut.GetQuotes(tickers);
 
             // Assert
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: $"Received stock quote request for 3 tickers: ");
-            this.mockLogger.VerifyLog(LogLevel.Information, messageSubstring: $"Not all stocks found in database");
-            this.mockLogger.VerifyNoOtherCalls();
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: $"Received stock quote request for 3 tickers: ");
+            mockLogger.VerifyLog(LogLevel.Information, messageSubstring: $"Not all stocks found in database");
+            mockLogger.VerifyNoOtherCalls();
 
             Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
         }
@@ -173,7 +173,7 @@ namespace LondonStockApi.UnitTest
 
             foreach (StockQuote quote in quoteEntities)
             {
-                Assert.IsTrue(dtos.FirstOrDefault(dto => 
+                Assert.IsTrue(dtos.FirstOrDefault(dto =>
                     dto.Ticker == quote.Ticker && dto.PriceInSterling == quote.PriceInSterling) != null);
             }
         }
