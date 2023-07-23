@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LondonStockApi.Migrations
 {
     [DbContext(typeof(StockContext))]
-    [Migration("20230723135248_QueryStoredProcs")]
+    [Migration("20230723152613_QueryStoredProcs")]
     partial class QueryStoredProcs
     {
         /// <inheritdoc />
@@ -24,6 +24,19 @@ namespace LondonStockApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("LondonStockApi.Data.Entities.StockQuote", b =>
+                {
+                    b.Property<string>("Ticker")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("PriceInSterling")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Ticker");
+
+                    b.ToTable("StockQuotes");
+                });
 
             modelBuilder.Entity("LondonStockApi.Data.Entities.StockTransaction", b =>
                 {
