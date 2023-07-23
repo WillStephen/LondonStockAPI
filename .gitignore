@@ -14,6 +14,3 @@
 
 # Local appSettings
 appsettings.Local.json
-
-# EF Migrations folder
-Migrations/
