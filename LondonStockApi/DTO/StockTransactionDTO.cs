@@ -10,15 +10,15 @@ namespace LondonStockApi.DTO
     /// <param name="NumberOfShares">Number of shares traded in the transaction.</param>
     /// <param name="BrokerId">Unique ID of the broker that requested this transaction.</param>
     public record StockTransactionDTO(
-        [Required] 
+        [Required(AllowEmptyStrings = false)]
         string Ticker,
 
         [Required]
-        [Range(0, double.MaxValue, ErrorMessage = $"{nameof(PriceInSterling)} must be positive.")]
+        [Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = $"{nameof(PriceInSterling)} must be positive.")]
         decimal PriceInSterling,
 
         [Required]
-        [Range(0, double.MaxValue, ErrorMessage = $"{nameof(NumberOfShares)} must be positive.")]
+        [Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = $"{nameof(NumberOfShares)} must be positive.")]
         decimal NumberOfShares,
 
         [Required] 
