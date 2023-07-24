@@ -43,7 +43,7 @@ For an MVP deployed to the cloud, we might containerise the API, and deploy them
 
 That leaves the database. As the number of transactions in the database grows, the average operations might strain the database hardware. Something we could try would be to lazily calculate and cache average prices for each stock - calculating them when someone requests them, then storing the result in case it's requested again. Someone adding a transaction for that stock would require us to invalid the cache entry. However, you can imagine this being worth it at the end of the trading day - when the traders leave the City of London at 4:30, no more transactions are going to be posted - so we might as well calculate the average once and store it, at least until the next morning.
 
-The brute force approach is just to increase the hardware resources of the server - easy to do when using a managed database like SQL.
+The brute force approach is just to increase the hardware resources of the server - easy to do when using a managed database like Azure SQL.
 
 Other solutions like database replicas will have issues like data consistency, so will be tricky.
 
