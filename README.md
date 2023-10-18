@@ -1,3 +1,5 @@
+>**_NOTE:_** This was a quick project built during an interview process.
+
 # LondonStockApi 📈🚀
 
 ## Setup
